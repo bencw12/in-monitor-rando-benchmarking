@@ -32,7 +32,7 @@ cd ./rootfs
 ./mk-lebench-rootfs.sh
 cd ../
 
-BOOT_ARGS="reboot=k panic=1 pci=off console=ttyS0 init=/bin/ash"
+BOOT_ARGS="reboot=k panic=1 pci=off console=ttyS0"
 CONFIG_FILE="{
                     \"boot-source\": {
                         \"kernel_image_path\": \"${KERNEL_PATH}\",
