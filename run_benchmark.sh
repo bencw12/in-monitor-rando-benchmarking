@@ -149,7 +149,7 @@ extract_kernel_end=$(grep "at 0xf4" ${PWD}/perf/perf.log | grep "val 0x10 " | aw
 boot_start=$(grep "at 0xf4" ${PWD}/perf/perf.log | grep "val 0x11 " | awk '{print $5}' |  sed 's/\.//g' | sed 's/://g' )
 boot_end=$(grep "at 0xf4" ${PWD}/perf/perf.log | grep "val 0x12 " | awk '{print $5}' |  sed 's/\.//g' | sed 's/://g' )
 
-if [ ${2} == "firecracker-bzImage" ]; then
+if [ $(basename ${2}) == "firecracker-bzImage" ]; then
     in_monitor=$((bootstrap_start-fc_exec))
 else
     in_monitor=$((boot_start-fc_exec))
