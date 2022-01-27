@@ -149,6 +149,8 @@ extract_kernel_end=$(grep "at 0xf4" ${PWD}/perf/perf.log | grep "val 0x10 " | aw
 boot_start=$(grep "at 0xf4" ${PWD}/perf/perf.log | grep "val 0x11 " | awk '{print $5}' |  sed 's/\.//g' | sed 's/://g' )
 boot_end=$(grep "at 0xf4" ${PWD}/perf/perf.log | grep "val 0x12 " | awk '{print $5}' |  sed 's/\.//g' | sed 's/://g' )
 
+in_monitor_rando=$(grep in-monitor-randomization /tmp/logs.file | awk '{print $4}' )
+
 if [ $(basename ${2}) == "firecracker-bzImage" ]; then
     in_monitor=$((bootstrap_start-fc_exec))
 else
@@ -168,9 +170,13 @@ if ! [[ $bootstrap_rando  =~ ^[+-]?[0-9]+\.?[0-9]*$ ]]; then
         bootstrap_rando=0
 fi
 
+if ! [[ $in_monitor_rando  =~ ^[+-]?[0-9]+\.?[0-9]*$ ]]; then
+        in_monitor_rando=0
+fi
+
 if [ "${bootstrap}" -lt "0" ]; then
     bootstrap=0
 fi
 
-echo "{\"in_monitor\" : ${in_monitor}, \"guest\" : ${guest}, \"bootstrap\" : ${bootstrap}, \"decomp\" : ${decomp}, \"parse_elf\" : ${parse_elf}, \"bootstrap_rando\" : ${bootstrap_rando}}"
+echo "{\"in_monitor\" : ${in_monitor}, \"in_monitor_rando\": ${in_monitor_rando}, \"guest\" : ${guest}, \"bootstrap\" : ${bootstrap}, \"decomp\" : ${decomp}, \"parse_elf\" : ${parse_elf}, \"bootstrap_rando\" : ${bootstrap_rando}}"
 
