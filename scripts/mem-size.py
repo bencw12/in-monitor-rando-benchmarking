@@ -100,8 +100,8 @@ def mem_experiments():
                 total = 0
 
                 if int(line["guest"] > 0):
-                    #total += int(line["in_monitor"])
-                    total += int(line["guest"])
+                    total += int(line["in_monitor"])
+                    #total += int(line["guest"])
 
                 total_times.append(total) 
 
