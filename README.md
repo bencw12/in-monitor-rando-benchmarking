@@ -16,7 +16,7 @@ This repository contains the scripts/kernels/binaries necessary to evaluate the 
 
 `run_benchmark.sh <kernel-path> <firecracker-path> <cache/no-cache> <mem-alloc-mb>` boots a kernel with the specified Firecracker binary and outputs measurements from one boot to the terminal. If given `no-cache` caches are dropped before boot. Called by `run_batch.sh`
 
-`run_lebench.sh <nokaslr/kaslr/fgkaslr>` boots the `AWS` kernel with nokaslr, or in-monitor (FG)KASLR, with a rootfs containing the source for [LEBench](https://github.com/LinuxPerfStudy/LEBench) to evaluate kernel performance. Once the kernel boots, run `/LEBench/init.sh`. This will run LEBench, shutdown the kernel, and save the results. 
+`run_lebench.sh <nokaslr/kaslr/fgkaslr>` boots the `AWS` kernel with nokaslr, or in-monitor (FG)KASLR, with a rootfs containing the source for [LEBench](https://github.com/LinuxPerfStudy/LEBench) to evaluate kernel performance. Once the kernel boots, log in as root (username: `root`, password: `root`), and run `/LEBench/init.sh`. This will run LEBench, shutdown the kernel, and save the results. 
 
 `gen_graphs.sh` calls all the python scripts in ./scripts to generate graphs from the data in ./results-paper
 
