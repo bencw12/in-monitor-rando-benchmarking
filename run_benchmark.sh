@@ -32,7 +32,7 @@ if [ "${3}" = "no-cache" ]; then
         sync; echo 3 > /proc/sys/vm/drop_caches
 fi
 
-ROOTFS_PATH=${PWD}/rootfs/lebench.ext4
+ROOTFS_PATH=${PWD}/rootfs/boottime-rootfs.ext4
 KERNEL_NAME=$(basename ${1})
 
 if ! [ -f "${ROOTFS_PATH}" ]; then
