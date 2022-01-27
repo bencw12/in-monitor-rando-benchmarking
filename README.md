@@ -1,5 +1,10 @@
 # In-Monitor (FG)KASLR Benchmarking Suite
-This repository contains the scripts/kernels/binaries necessary to evaluate the performance of in-monitor (FG)KASLR
+This repository contains the scripts/kernels/binaries necessary to evaluate the performance of our implementation of in-monitor (FG)KASLR in Firecracker v0.26. We leverage `perf` (Linux profiling with performance counters), and small patches to the Linux kernel to make IO writes to a unique port to signal the beginning/end of relevant function calls/events. The first timestamp is taken when Firecracker is executed, and the last is taken after the call to execute the guest's `init` process. The results from the experiments we ran on our machine are also included. `perf` records and timestamps the call to exec Firecracker and each of the subsequent IO writes from the guest kernel.
+## Machine Specs
+- CPU: Intel(R) Core(TM) i7-4790 @ 3.60GHz
+- Memory: 8GB DDR3 @ 1600MHz
+- Storage: Crucial MX500 250GB SSD, 560mb/s reads 
+
 
 # Running Benchmarks
 `run_compression_bakeoff.sh <num-runs>` runs the experiment for [Figure 3](./graphs/compression-bakeoff.pdf) comparing overall boot time of bzImages using various compression schemes supported by Linux. The cache is warmed up before recording data for each kernel. Our results show that `lz4` is the fastest compression scheme.
@@ -21,7 +26,7 @@ This repository contains the scripts/kernels/binaries necessary to evaluate the 
 `gen_graphs.sh` calls all the python scripts in ./scripts to generate graphs from the data in ./results-paper
 
 ## /bin
-Contains 3 Firecracker binaries: the stock Firecracker v0.26 without our patches [firecracker-nokaslr](https://github.com/bencw12/firecracker/tree/stock), Firecracker with just KASLR implemented [firecracker-kaslr](https://github.com/bencw12/firecracker/tree/kaslr), Firecracker with FG-KASLR implemented [firecracker-fgkaslr](https://github.com/bencw12/firecracker/tree/fgkaslr), and Firecracker with a patch based on [this pull request](https://github.com/firecracker-microvm/firecracker/pull/670) to boot a bzImage [firecracker-bzImage](https://github.com/bencw12/firecracker/tree/bzImage). The `perf` binary built from `linux/tools/perf` is also included for use in tracing IO writes from the guest.
+Contains 4 Firecracker binaries: the stock Firecracker without our patches [firecracker-nokaslr](https://github.com/bencw12/firecracker/tree/stock), Firecracker with just KASLR implemented [firecracker-kaslr](https://github.com/bencw12/firecracker/tree/kaslr), Firecracker with FG-KASLR implemented [firecracker-fgkaslr](https://github.com/bencw12/firecracker/tree/fgkaslr), and Firecracker with a patch based on [this pull request](https://github.com/firecracker-microvm/firecracker/pull/670) to boot a bzImage [firecracker-bzImage](https://github.com/bencw12/firecracker/tree/bzImage). The `perf` binary we used is also included.
 ## /configs
 Contains the Linux kernel configuration files for [Lupine](https://systems-seminar-uiuc.github.io/spring20/content/a-linux-in-unikernel-clothing.pdf), [AWS](https://github.com/bencw12/firecracker/blob/stock/resources/microvm-kernel-x86_64.config), and the config from the distribution of Ubuntu on our machine. For each kernel, there are three variants: `nokaslr`, with randomization disabled, `kaslr`, with just coarse-grained randomization, and `fgkaslr`, with fine-grained randomization. Note that the variants for different compression schemes are not included, but another scheme can be selected by commenting `CONFIG_KERNEL_GZIP` and enabling another compression option. Each of the configs were generated from Linux 5.11-rc3 with our [compression none](https://github.com/bencw12/linux/tree/compression-none) scheme, so each contains the `CONFIG_KERNEL_NONE` option.
 ## /kernels
