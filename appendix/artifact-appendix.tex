@@ -1,0 +1,196 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Artifact Appendix Template for EuroSys'22 AE
+%
+% this document has a maximum length of 2 pages.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[sigplan,twocolumn]{acmart}
+\usepackage{hyperref}
+\begin{document}
+    
+
+\appendix
+\section{Artifact Appendix} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Abstract}
+%{\em [Mandatory]} 
+%{\em Provide a short description of your artifact.}
+
+The artifact provided with this paper comprises a \\
+benchmarking suite to evaluate the performance
+of booting guest kernels with Firecracker VMM modified to support in-monitor (FG)KASLR, as well as the data/scripts
+used to generate figures used in the paper.
+We leverage \textit{perf} (Linux profiling with performance counters), and small patches to the 
+Linux kernel to issue I/O writes to a unique port that are
+traced as KVM events by \textit{perf}\footnote{The idea to use \textit{perf} to trace I/O writes was found here: \url{https://github.com/stefano-garzarella/qemu-boot-time}}.
+Benchmarking begins when Firecracker is executed,
+timestamps are taken before and after relevant function calls/code blocks
+(e.g decompression, (FG)KASLR functionality, loading kernel segments, etc.),
+and the final timestamp is taken after the call to execute the guest's \texttt{init} process.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Description \& Requirements}
+
+%\textit{[Mandatory] This section should list all the information necessary to recreate the same experimental setup you have used to run your artifact. This includes at least a persistent link to a publicly accessible archival repository where all the artifact's main components (software, data-sets, documentation, etc.) can be accessed and, where this apply, the minimal hardware and software requirements to run your artifact. It is also very good practice to list and describe in this section benchmarks where those are part of, or simply have been used to produce results with, your artifact.}
+
+\subsubsection{How to access}
+Artifacts can be accessed via:\\
+ \url{https://github.com/bencw12/in-monitor-rando-benchmarking}
+% Note: This evaluation do not mandate the use of specific public repositories, so institutional repositories, or open commercial repositories are acceptable. In any case, repositories used to archive the artifact should have a declared plan to enable permanent accessibility.
+
+\subsubsection{Hardware dependencies}
+Firecracker requires either Intel x86\_64, AMD x86\_64, or ARM64 CPUs
+that offer hardware virtualization support.
+
+\subsubsection{Software dependencies} 
+Currently, Firecracker requires either Linux kernel version 4.14 or 5.10.  
+
+\subsubsection{Benchmarks} 
+%\textit{Describe here any data (e.g., data-sets, models, workloads, etc.) required by the experiments with this artifact reported in your paper.} \textit{[Simply write "None." where this does not apply to your artifact.]}
+We provide all guest kernels, file systems, and relocation information needed to boot VMs with and without our modifications to Firecracker.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Set-up}
+Firecracker requires KVM access which can be granted with:\\ \texttt{sudo setfacl -m u:\$USER:rw /dev/kvm}.
+All scripts are designed to be run from a standard Linux shell with root permissions with no additional set-up. 
+%{\em [Mandatory]} \textit{This section should include all the installation and configuration steps required to prepare the environment to be used for the evaluation of your artifact.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Evaluation workflow}
+{%\em [Mandatory]} \textit{This section should include all the operational steps and experiments which must be performed to evaluate your artifact is functional and to validate your paper's key results and claims. For that purpose, we ask you to use the two following subsections and cross-reference the items therein as explained next.}
+
+\subsubsection{Major Claims}
+%s\textit{Enumerate here the major claims (Cx) made in your paper. Follows an example:}\\
+
+\begin{itemize}
+    \item (C1): When kernels are not warm in the cache, a compressed \texttt{bzImage} achieves optimal performance
+    due to the image being smaller than an uncompressed image, but when kernels are cached, the increase in I/O time
+    to load an uncompressed kernel over that of a \texttt{bzImage} is small compared to the overhead incurred by the
+    \texttt{bzImage}'s bootstrap loader. This is shown in the experiment (E2) described in Section 2.2 with results 
+    shown in Figure 4.
+    \item (C2): The majority of the extra overhead from a \texttt{bzImage} bootstrap loader stems from decompression, 
+    which is why microVMs have moved toward directly booting uncompressed kernels. The data supporting this is also 
+    generated from (E2), and results are shown in Figure 5.
+    \item (C3): Optimizing the \texttt{bzImage} bootstrap loader to remove decompression and redundant kernel 
+    relocations still leaves performance on the table and does not justify booting a \texttt{bzImage} over
+    an uncompressed kernel. This experiment (E3) is described in Section 3.3 with results shown in Figure 6.
+    \item (C4): In-monitor randomization achieves up 22\% to better performance than existing/optimized methods of self-randomization 
+    where a bootstrap loader, rather than the monitor, is the controlling principle. On average, in-monitor KASLR adds a small overhead of 4\% (2ms)
+    compared to stock Firecracker. This is shown in the experiment (E4) described in Section 5.2. Results are illustrated in Figure 9.
+    %\textit{(C1): System\_name achieves the same accuracy of the state-of-the-art systems for a task X while saving 2x storage resources. This is proven by the experiment (E1) described in [refer to your paper's sections] whose results are illustrated/reported in [refer to your paper's plots, tables, sections or the sort].}
+    \item (C5): In-monitor randomization does not affect kernel performance outside of boot. 
+    The experiments (E5) described in Section 5.4 verify this and results are shown in Figure 10.
+\end{itemize}
+
+\subsubsection{Experiments}
+All kernels, file systems, relocation information, and binaries are included
+with our artifacts, so all experiments except for (E5) can be run
+by simply executing one shell script from the root of the repository with no
+additional preparation. Each VM is allocated 256M and 1 CPU, and
+the cache is warmed by booting each kernel 5 times before recording data unless otherwise
+specified. Each experiment finishes all 100 boots of a kernel before moving on to the next.
+All new data is saved in a directory separate
+from the data used in the paper, and will be used instead of our results
+by graph generation scripts if present.
+~\\
+
+Experiment (E1): \textit{Compression Bakeoff} [1.5 compute-hours]: 
+A comparison of overall boot times for \texttt{bzImage}s compressed
+with six different compression schemes supported by Linux. 
+~\\
+
+\textit{[Execution]}
+Executing \texttt{run\_compression\_bakeoff.sh 100} will
+boot each kernel 100 times to replicate the results used in the paper.
+\\
+
+\textit{[Results]}
+Results are collected and saved automatically for each kernel during execution. To use the new data to generate 
+a graph like Figure 3, run \texttt{scripts/fig-3.py}. LZ4 is expected to
+have the lowest overhead. 
+~\\
+%\textit{In all of the above blocks, we also recommend you to provide precise indications about the expected outcome for each of the steps.}
+
+Experiment (E2): \textit{Cache-Effects} [1 compute-hour]: 
+An experiment used to demonstrate the effects of caching on overall boot time
+when booting a \texttt{bzImage} versus an uncompressed kernel. 
+~\\
+
+\textit{[Execution]}
+Executing \texttt{run\_cache\_effects.sh 100} will
+boot each kernel 100 times to replicate the results used in the paper. First each kernel is allowed to be warm in the cache, then
+each kernel is run after dropping the caches (pagecache, dentries, and inodes) to see the affect of a cold cache on boot performance.
+\\
+
+\textit{[Results]}
+Results are collected and saved automatically for each kernel during execution. The results from
+this experiment are used to generate Figures 4 and 5. To use the new data to generate 
+them, run \texttt{scripts/fig-4.py} and \texttt{scripts/fig-5.py}. Figure 4 is expected to show that \texttt{bzImage}s will 
+have faster boot times than uncompressed kernels when the cache is cold, but uncompressed kernels
+boot faster than \texttt{bzImage}s when they can be cached. Figure 5 is expected to show that
+decompression makes up the majority of bootstrapping time.
+~\\
+
+Experiment (E3): \textit{Bootstrap Method Comparison} [1 compute-hour]: 
+A comparison of four methods of bootstrapping Linux: \textit{none,
+lz4, none-optimized,} and \textit{uncompressed}. \textit{none} kernels
+are patched to simply leave the kernel uncompressed when linking into a \texttt{bzImage}, \textit{lz4}
+is an unmodified \texttt{bzImage} using LZ4 compression, \textit{none-optimized} kernels remove decompression
+and extra relocations, and \textit{uncompressed} is the uncompressed kernel natively supported by Firecracker.
+~\\
+
+\textit{[Execution]}
+Executing \texttt{run\_bootstrap\_comparison.sh 100} will
+boot each kernel 100 times to replicate the results used in the paper.
+\\
+
+\textit{[Results]}
+Results are collected and saved automatically for each kernel during execution. To use the new data to generate 
+a graph like Figure 6, run \texttt{scripts/fig-6.py}. \textit{none} kernels are expected to have the highest overhead,
+followed by \textit{lz4}, \textit{none-optimized}, and \textit{uncompressed} with the lowest overhead. 
+~\\
+
+Experiment (E4): \textit{Evaluation} [2.5 compute-hours]: 
+This experiment evaluated the performance of in-monitor (FG)KASLR by comparing in-monitor randomization with uncompressed 
+kernels to self-randomization methods using \textit{none-optimized} and LZ4. Each kenrel is also compared against 
+its unrandomized counterpart as a baseline.
+~\\
+
+\textit{[Execution]}
+Executing \texttt{run\_eval.sh 100} will
+boot each kernel 100 times to replicate the results used in the paper.
+\\
+
+\textit{[Results]}
+Results are collected and saved automatically for each kernel during execution. To use the new data to generate 
+a graph like Figure 9, run \texttt{scripts/fig-9.py}. In-monitor randomization with uncompressed kernels is expected to
+have the lowest overhead compared to kernels with \textit{none-optimized} and LZ4. Firecracker with in-monitor KASLR is expected to
+exhibit minimal overhead compared to stock Firecracker.
+~\\
+
+Experiment (E5): \textit{LEBench} [5 human-minutes, 75 compute-minutes]: 
+This experiment uses \texttt{LEBench}\footnote{\url{https://github.com/LinuxPerfStudy/LEBench}} to evaluate the performance
+of important kernel functions for an unrandomized kernel, and kernels with (FG)KASLR. 
+~\\
+
+\textit{[Execution]}
+Executing \texttt{run\_lebench.sh \\ <nokaslr/kaslr/fgkaslr>} will
+boot either an unrandomized kernel (\texttt{nokaslr}), a kernel with KASLR (\texttt{kaslr}), or a kernel with FG-KASLR (\texttt{fgkaslr}). All three kernel variants need to be run
+to generate the data sufficient to recreate Figure 10. Once a kernel boots, log in as \texttt{root} (username \texttt{root}, password \texttt{root}),
+then execute \texttt{/LEBench/run.sh}. This will run the LEBench program and the kernel will shutdown when it is finished. Repeat this
+process for \texttt{kaslr} and \texttt{fgkaslr.}
+\\
+
+\textit{[Results]}
+Results are collected and saved automatically after LEBench finishes for each kernel. To use the new data to generate 
+a graph like Figure 10, run \texttt{scripts/fig-10.py}. The performance of kernels with in-monitor (FG)KASLR for each kernel function
+is not expected to deviate significantly from the baseline of \texttt{nokaslr}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Notes on Reusability}
+\label{sec:reuse}
+The methods we used to benchmark the performance of the Linux bootstrap process can be extended to any part of the kernel by defining more
+tracepoints and placing I/O writes in the kernel code. 
+
+
+\end{document}
