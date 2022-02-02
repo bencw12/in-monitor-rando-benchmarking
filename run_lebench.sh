@@ -26,7 +26,8 @@ mkdir -p ./results/lebench
 
 RUNNER="#!/bin/ash"$'\n'"cd /LEBench/TEST_DIR"$'\n'"export LEBENCH_DIR=\"/LEBench/\""$'\n'"./OS_Eval 0 ${1}"$'\n'"reboot"
 
-echo "$RUNNER" > ./rootfs/LEBench/init.sh
+echo "$RUNNER" > ./rootfs/LEBench/run.sh
+chmod +x ./rootfs/LEBench/run.sh
 
 cd ./rootfs
 ./mk-lebench-rootfs.sh
