@@ -7,7 +7,8 @@
 \usepackage{hyperref}
 \begin{document}
     
-
+\acmConference[EuroSys'22]{EuroSys'22}{April 2022}{Rennes,
+  France}
 \appendix
 \section{Artifact Appendix} 
 
@@ -25,7 +26,7 @@ Linux kernel to issue I/O writes to a unique port that are
 traced as KVM events by \textit{perf}\footnote{The idea to use \textit{perf} to trace I/O writes was found here: \url{https://github.com/stefano-garzarella/qemu-boot-time}}.
 Benchmarking begins when Firecracker is executed,
 timestamps are taken before and after relevant function calls/code blocks
-(e.g decompression, (FG)KASLR functionality, loading kernel segments, etc.),
+(e.g., decompression, (FG)KASLR functionality, loading kernel segments, etc.),
 and the final timestamp is taken after the call to execute the guest's \texttt{init} process.
 
 
@@ -40,18 +41,24 @@ Artifacts can be accessed via:\\
 % Note: This evaluation do not mandate the use of specific public repositories, so institutional repositories, or open commercial repositories are acceptable. In any case, repositories used to archive the artifact should have a declared plan to enable permanent accessibility.
 
 \subsubsection{Hardware dependencies}
-Firecracker requires either Intel x86\_64, AMD x86\_64, or ARM64 CPUs
-that offer hardware virtualization support.
+Firecracker requires either Intel x86\_64, or AMD x86\_64, CPUs
+that offer hardware virtualization support. All experiments for the paper
+were run on a machine with an Intel Core i7-4790 CPU @ 3.60 GHz.
 
 \subsubsection{Software dependencies} 
-Currently, Firecracker requires either Linux kernel version 4.14 or 5.10.  
+Currently, Firecracker recommends either Linux kernel version 4.14 or 5.10, as those are
+the versions they currently use to validate source code. We ran all experiments on a machine running
+Ubuntu 18.04 using a Linux 4.15 kernel.
 
 \subsubsection{Benchmarks} 
 %\textit{Describe here any data (e.g., data-sets, models, workloads, etc.) required by the experiments with this artifact reported in your paper.} \textit{[Simply write "None." where this does not apply to your artifact.]}
-We provide all guest kernels, file systems, and relocation information needed to boot VMs with and without our modifications to Firecracker.
+All guest kernels, file systems, and relocation information needed to boot VMs
+with and without our modifications to Firecracker are included in the artifact repository.
+The data collected for our experiments is in the \texttt{results-paper} directory, with subdirectories
+containing the results for each experiment, and the included scripts will generate the graphs shown in the paper. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Set-up}
-Firecracker requires KVM access which can be granted with:\\ \texttt{sudo setfacl -m u:\$USER:rw /dev/kvm}.
+Firecracker requires KVM access which can be granted with: \texttt{sudo setfacl -m u:\$USER:rw /dev/kvm}.
 All scripts are designed to be run from a standard Linux shell with root permissions with no additional set-up. 
 %{\em [Mandatory]} \textit{This section should include all the installation and configuration steps required to prepare the environment to be used for the evaluation of your artifact.}
 
@@ -85,13 +92,15 @@ All scripts are designed to be run from a standard Linux shell with root permiss
 \subsubsection{Experiments}
 All kernels, file systems, relocation information, and binaries are included
 with our artifacts, so all experiments except for (E5) can be run
-by simply executing one shell script from the root of the repository with no
-additional preparation. Each VM is allocated 256M and 1 CPU, and
+by executing one shell script from the root of the repository with no
+additional preparation. All guest kernels are Linux version 5.11, since this is the version FG-KASLR was originally 
+patched into.
+Each VM is allocated 256M and 1 CPU, and
 the cache is warmed by booting each kernel 5 times before recording data unless otherwise
 specified. Each experiment finishes all 100 boots of a kernel before moving on to the next.
 All new data is saved in a directory separate
 from the data used in the paper, and will be used instead of our results
-by graph generation scripts if present.
+by graph generation scripts if present. 
 ~\\
 
 Experiment (E1): \textit{Compression Bakeoff} [1.5 compute-hours]: 
@@ -105,7 +114,7 @@ boot each kernel 100 times to replicate the results used in the paper.
 \\
 
 \textit{[Results]}
-Results are collected and saved automatically for each kernel during execution. To use the new data to generate 
+Results are collected and saved automatically to the directory \texttt{results/compression-bakeoff/} for each kernel during execution. To use the new data to generate 
 a graph like Figure 3, run \texttt{scripts/fig-3.py}. LZ4 is expected to
 have the lowest overhead. 
 ~\\
@@ -123,7 +132,7 @@ each kernel is run after dropping the caches (pagecache, dentries, and inodes) t
 \\
 
 \textit{[Results]}
-Results are collected and saved automatically for each kernel during execution. The results from
+Results are collected and saved to the directory \texttt{results/cache-effects/} automatically for each kernel during execution. The results from
 this experiment are used to generate Figures 4 and 5. To use the new data to generate 
 them, run \texttt{scripts/fig-4.py} and \texttt{scripts/fig-5.py}. Figure 4 is expected to show that \texttt{bzImage}s will 
 have faster boot times than uncompressed kernels when the cache is cold, but uncompressed kernels
@@ -145,7 +154,7 @@ boot each kernel 100 times to replicate the results used in the paper.
 \\
 
 \textit{[Results]}
-Results are collected and saved automatically for each kernel during execution. To use the new data to generate 
+Results are collected and saved automatically to the directory \texttt{results/bootstrap-comparison/} for each kernel during execution. To use the new data to generate 
 a graph like Figure 6, run \texttt{scripts/fig-6.py}. \textit{none} kernels are expected to have the highest overhead,
 followed by \textit{lz4}, \textit{none-optimized}, and \textit{uncompressed} with the lowest overhead. 
 ~\\
@@ -162,7 +171,7 @@ boot each kernel 100 times to replicate the results used in the paper.
 \\
 
 \textit{[Results]}
-Results are collected and saved automatically for each kernel during execution. To use the new data to generate 
+Results are collected and saved automatically to the directory \texttt{results/evaluation/} for each kernel during execution. To use the new data to generate 
 a graph like Figure 9, run \texttt{scripts/fig-9.py}. In-monitor randomization with uncompressed kernels is expected to
 have the lowest overhead compared to kernels with \textit{none-optimized} and LZ4. Firecracker with in-monitor KASLR is expected to
 exhibit minimal overhead compared to stock Firecracker.
@@ -182,7 +191,7 @@ process for \texttt{kaslr} and \texttt{fgkaslr.}
 \\
 
 \textit{[Results]}
-Results are collected and saved automatically after LEBench finishes for each kernel. To use the new data to generate 
+Results are collected and saved automatically to the directory \texttt{results/lebench/} after LEBench finishes for each kernel. To use the new data to generate 
 a graph like Figure 10, run \texttt{scripts/fig-10.py}. The performance of kernels with in-monitor (FG)KASLR for each kernel function
 is not expected to deviate significantly from the baseline of \texttt{nokaslr}.
 
