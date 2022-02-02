@@ -15,13 +15,13 @@ This repository contains the scripts/kernels/binaries necessary to evaluate the 
 
 `run_eval.sh <num-runs>` runs the experiment for Figure 9 [a](./graphs/lupine4-eval.pdf), [b](./graphs/aws-eval.pdf) and [c](./graphs/ubuntu-eval.pdf) used to compare in-monitor randomization, self-randomization with optimized compression-none, and self-randomization with lz4 compression. Our results show that in-monitor is the fastest method of randomization, followed by compression-none, then lz4. 
 
-`run_mem_size.sh <num-runs>` runs each uncompressed kernel with `nokaslr`, `kaslr`, and `fgkaslr` with 256M, 512M, 1024M, and 2048M of allocated memory to determine whether our implementation of in-monitor randomization is affected by the amount of memory given to a VM instance. Our results show that the time spent in-monitor does not change with respect to allocated memory, and that the time to execute the kernel increases as allocated memory increases, but in-monitor randomization does not affect this trend.
-
-`run_batch.sh <kernel-path> [no][fg]kaslr/bzImage cache/no-cache <mem-alloc-mb> <num-runs> <output-dir>` boots a kernel `num-runs` times and writes the output to `<kernel-name>-<cache/no-cache>.txt`. If given `cache` the cache is warmed by booting the kernel 10 times before recording data. Called by all of the above scripts.
+`run_batch.sh <kernel-path> [no][fg]kaslr/bzImage cache/no-cache <mem-alloc-mb> <num-runs> <output-dir>` boots a kernel `num-runs` times and writes the output to `<kernel-name>-<cache/no-cache>.txt`. If given `cache` the cache is warmed by booting the kernel 5 times before recording data. Called by all of the above scripts.
 
 `run_benchmark.sh <kernel-path> <firecracker-path> <cache/no-cache> <mem-alloc-mb>` boots a kernel with the specified Firecracker binary and outputs measurements from one boot to the terminal. If given `no-cache` caches are dropped before boot. Called by `run_batch.sh`
 
-`run_lebench.sh <nokaslr/kaslr/fgkaslr>` boots the `AWS` kernel with nokaslr, or in-monitor (FG)KASLR, with a rootfs containing the source for [LEBench](https://github.com/LinuxPerfStudy/LEBench) to evaluate kernel performance. Once the kernel boots, log in as root (username: `root`, password: `root`), and run `/LEBench/init.sh`. This will run LEBench, shutdown the kernel, and save the results. 
+`run_lebench.sh <nokaslr/kaslr/fgkaslr>` boots the `AWS` kernel with nokaslr, or in-monitor (FG)KASLR, with a rootfs containing the source for [LEBench](https://github.com/LinuxPerfStudy/LEBench) to evaluate kernel performance. Once the kernel boots, log in as root (username: `root`, password: `root`), and run `/LEBench/run.sh`. This will run LEBench, shutdown the kernel, and save the results.
+
+`run_mem_size.sh <num-runs>` runs each uncompressed kernel with `nokaslr`, `kaslr`, and `fgkaslr` with 256M, 512M, 1024M, and 2048M of allocated memory to determine whether our implementation of in-monitor randomization is affected by the amount of memory given to a VM instance. Our results show that the time spent in-monitor does not change with respect to allocated memory, and that the time to execute the kernel increases as allocated memory increases, but in-monitor randomization does not affect this trend. The results for this experiment were not added to the paper, but we have included a script to generate a Figure displaying the results of this experiment as well.
 
 `gen_graphs.sh` calls all the python scripts in ./scripts to generate graphs from the data in ./results-paper
 
@@ -48,7 +48,8 @@ Relocation information for each of the uncompressed kernels that implement KASLR
 Python scripts to generate the graphs used in the paper.
 
 ## /results-paper
-Data used to generate the graphs in the paper.
+Data used to generate the graphs in the paper. Each experiment, except for memory experiments, booted all kernels with 256M
+of allocated memory.
 
 ## /graphs
 Output directory for generated graphs
