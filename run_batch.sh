@@ -46,8 +46,8 @@ rm -f ${outfile}
 # warm up the cache if using it
 if [ "${3}" = "cache" ]; then
     
-    for ((n=0;n<10;n++)); do
-	echo -ne "Warming cache $((n+1))/10\r"
+    for ((n=0;n<5;n++)); do
+	echo -ne "Warming cache $((n+1))/5\r"
         ${PWD}/run_benchmark.sh ${1} ${bin} ${3} ${4} > /dev/null 2>&1
     done
     echo ""
