@@ -7,7 +7,10 @@ import os
 from matplotlib.pyplot import bar, figure
 import re
 
-RESULTS_PATH="./results-paper/lebench/"
+if os.path.isdir("./results/lebench/"):
+    RESULTS_PATH = "./results/lebench/"
+else:
+    RESULTS_PATH = "./results-paper/lebench/"
 
 colors=mcolors.CSS4_COLORS
 fgkaslr_color=colors["darkcyan"]

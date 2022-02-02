@@ -7,7 +7,10 @@ import os
 from matplotlib.pyplot import bar, figure
 import json
 
-RESULTS_PATH="./results-paper/mem-size/"
+if os.path.isdir("./results/mem-size/"):
+    RESULTS_PATH = "./results/mem-size/"
+else:
+    RESULTS_PATH = "./results-paper/mem-size/"
 
 colors=mcolors.CSS4_COLORS
 bootstrap_color=colors["darkcyan"]
@@ -92,16 +95,18 @@ def mem_experiments():
             f = open(RESULTS_PATH + all_dirs[size_i] + "/" + temp)
             f = f.readlines()
 
-            total_times = []
+            in_monitor_times = []
+            guest_times = []
 
             for line in f:
                 line = json.loads(line)
 
-                total = 0
-
                 if int(line["guest"] > 0):
-                    total += int(line["in_monitor"])
-                    #total += int(line["guest"])
+                    in
+                    total_times.append(
+                        (int(line["in_monitor"], int(line["guest"])))
+                    )
+                    
 
                 total_times.append(total) 
 

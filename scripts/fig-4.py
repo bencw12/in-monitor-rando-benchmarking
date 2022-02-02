@@ -7,12 +7,16 @@ import os
 from matplotlib.pyplot import bar, figure
 import json
 
+if os.path.isdir("./results/cache-effects/"):
+    RESULTS_PATH = "./results/cache-effects/"
+else:
+    RESULTS_PATH = "./results-paper/cache-effects/"
+
 colors=mcolors.CSS4_COLORS
 in_monitor_color=colors["darkcyan"]
 bootstrap_color=colors["deepskyblue"]
 guest_color=colors["mediumseagreen"]
 bar_color="white"
-RESULTS_PATH="./results-paper/cache-effects/"
 
 def cache_effects():
 

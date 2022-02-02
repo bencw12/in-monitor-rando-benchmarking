@@ -7,8 +7,11 @@ import os
 from matplotlib.pyplot import bar, figure
 import json
 
-
-RESULTS_PATH = "./results-paper/compression-bakeoff/"
+if os.path.isdir("./results/compression-bakeoff/"):
+    RESULTS_PATH = "./results/compression-bakeoff/"
+else:
+    RESULTS_PATH = "./results-paper/compression-bakeoff/"
+    
 colors=mcolors.CSS4_COLORS
 ubuntu_color=colors["darkcyan"]
 lupine_color=colors["deepskyblue"]

@@ -7,7 +7,10 @@ import os
 from matplotlib.pyplot import bar, figure
 import json
 
-RESULTS_PATH="./results-paper/cache-effects/"
+if os.path.isdir("./results/cache-effects/"):
+    RESULTS_PATH = "./results/cache-effects/"
+else:
+    RESULTS_PATH = "./results-paper/cache-effects/"
 
 def bootstrap_breakdown():
 

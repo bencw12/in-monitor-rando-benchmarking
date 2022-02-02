@@ -7,7 +7,10 @@ import os
 from matplotlib.pyplot import bar, figure
 import json
 
-RESULTS_PATH="./results-paper/evaluation/"
+if os.path.isdir("./results/evaluation/"):
+    RESULTS_PATH = "./results/evaluation/"
+else:
+    RESULTS_PATH = "./results-paper/evaluation/"
 
 colors=mcolors.CSS4_COLORS
 in_monitor_color=colors["darkcyan"]

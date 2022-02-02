@@ -7,7 +7,10 @@ import os
 from matplotlib.pyplot import bar, figure
 import json
 
-RESULTS_PATH="./results-paper/bootstrap-comparison/"
+if os.path.isdir("./results/bootstrap-comparison/"):
+    RESULTS_PATH = "./results/bootstrap-comparison/"
+else:
+    RESULTS_PATH = "./results-paper/bootstrap-comparison/"
 
 colors= mcolors.CSS4_COLORS
 in_monitor_color=colors["darkcyan"]
