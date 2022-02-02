@@ -23,9 +23,7 @@ def mem_experiments():
 
     figure(figsize=(6,3))
 
-    all_dirs = os.listdir(RESULTS_PATH)
-
-    
+    all_dirs = ["256", "512", "1024", "2048"]
 
     all_files = {}
 
@@ -76,6 +74,8 @@ def mem_experiments():
         Patch(facecolor=bootstrap_color, label="512M"),
         Patch(facecolor=parse_elf_color, label="1G"),
         Patch(facecolor=rando_color, label="2G"),
+        Patch(facecolor="white", edgecolor="black", hatch="//////", label="in-monitor"),
+        Patch(facecolor="white", edgecolor="black", hatch="\\\\\\\\\\\\", label="Linux boot"),
     ]
 
     plt.legend(handles=legend, ncol=4)
@@ -91,6 +91,8 @@ def mem_experiments():
 
         for size_i in range(4):
 
+            print(all_dirs[size_i])
+
             temp = bars[all_dirs[size_i]]
             f = open(RESULTS_PATH + all_dirs[size_i] + "/" + temp)
             f = f.readlines()
@@ -102,19 +104,25 @@ def mem_experiments():
                 line = json.loads(line)
 
                 if int(line["guest"] > 0):
-                    in
-                    total_times.append(
-                        (int(line["in_monitor"], int(line["guest"])))
-                    )
-                    
-
-                total_times.append(total) 
+                    in_monitor_times.append(int(line["in_monitor"]))
+                    guest_times.append(int(line["guest"]))
 
             plt.bar(
                 x + (0.2*size_i), 
-                np.average(total_times)/1000.0,
+                np.average(guest_times)/1000.0,
                 width=0.2,
-                color=colors[size_i]
+                bottom=np.average(in_monitor_times)/1000.0,
+                color="white",
+                edgecolor=colors[size_i],
+                hatch="\\\\\\\\\\\\"
+            )
+            plt.bar(
+                x + (0.2*size_i),
+                np.average(in_monitor_times)/1000.0,
+                width=0.2,
+                color="white",
+                edgecolor=colors[size_i],
+                hatch="///////"
             )
 
     keys = ['lupine-nokaslr', 'lupine-kaslr', 'lupine-fgkaslr',
