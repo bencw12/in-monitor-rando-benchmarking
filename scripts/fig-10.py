@@ -23,7 +23,6 @@ def lebench():
     baseline_flines = baseline_f.readlines()
 
     baseline_flines_kernel = baseline_flines[1].split(',')[1]
-    print(baseline_flines_kernel)
     baseline_data_all = baseline_flines[2:]
     baseline_data_av = []
     for line in baseline_data_all:
