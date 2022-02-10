@@ -11,7 +11,7 @@ This repository contains the scripts/kernels/binaries necessary to evaluate the 
 
 `run_cache_effects.sh <num-runs>` runs the experiment for [Figure 4](./graphs/overall-boot-breakdown.pdf) and data used in [Figure 5](./graphs/bootstrap-loader-breakdown.pdf) to compare the affects of a warm/cold cache on boot time. Our results show that when kernels can be cached, booting an uncompressed kernel is optimal, and when the cache is cold, a bzImage achieves optimal performance.
 
-`run_bootstrap_method_comparison.sh <num-runs>` runs the experiment for [Figure 6](./graphs/compression-none-vs-lz4-overall.pdf) comparing boot performance of [compression-none](https://github.com/bencw12/linux/tree/compression-none-old), bzImage with lz4 compression, [optimized-compression-none](https://github.com/bencw12/linux/tree/compression-none), and an uncompressed boot.
+`run_bootstrap_comparison.sh <num-runs>` runs the experiment for [Figure 6](./graphs/compression-none-vs-lz4-overall.pdf) comparing boot performance of [compression-none](https://github.com/bencw12/linux/tree/compression-none-old), bzImage with lz4 compression, [optimized-compression-none](https://github.com/bencw12/linux/tree/compression-none), and an uncompressed boot.
 
 `run_eval.sh <num-runs>` runs the experiment for Figure 9 [a](./graphs/lupine4-eval.pdf), [b](./graphs/aws-eval.pdf) and [c](./graphs/ubuntu-eval.pdf) used to compare in-monitor randomization, self-randomization with optimized compression-none, and self-randomization with lz4 compression. Our results show that in-monitor is the fastest method of randomization, followed by compression-none, then lz4. 
 
