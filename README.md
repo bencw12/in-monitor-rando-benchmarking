@@ -5,7 +5,7 @@ This repository contains the scripts/kernels/binaries necessary to evaluate the 
 - Memory: 8GB DDR3 @ 1600MHz
 - Storage: Crucial MX500 250GB SSD, 560mb/s reads 
 
-# Dependencies
+## Dependencies
 - `perf` depends on `libpython2.7`
 - Firecracker recommends Linux 4.14, or 5.10
 - Scripts to generate graphs need Python 3.
