@@ -5,6 +5,10 @@ This repository contains the scripts/kernels/binaries necessary to evaluate the 
 - Memory: 8GB DDR3 @ 1600MHz
 - Storage: Crucial MX500 250GB SSD, 560mb/s reads 
 
+# Dependencies
+- `perf` depends on `libpython2.6`
+- Firecracker recommends Linux 4.14, or 5.10
+- Scripts to generate graphs need Python 3.
 
 # Running Benchmarks
 `run_compression_bakeoff.sh <num-runs>` runs the experiment for [Figure 3](./graphs/compression-bakeoff.pdf) comparing overall boot time of bzImages using various compression schemes supported by Linux. The cache is warmed up before recording data for each kernel. Our results show that `lz4` is the fastest compression scheme.
