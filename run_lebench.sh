@@ -53,9 +53,13 @@ for KASLR_OPT in nokaslr kaslr fgkaslr; do
 
     ${FC_BIN}   --api-sock /tmp/firecracker.socket --no-api --config-file ./vm_config.json
 
+    wait $!
+
     mkdir -p ./rootfs/mount
     mount -o loop ./rootfs/lebench.ext4 ./rootfs/mount
     cp ./rootfs/mount/LEBench/output.${KASLR_OPT}.csv ./results/lebench/
+    
+    wait $!
     umount ./rootfs/mount
     rm -rf ./rootfs/mount
 done
