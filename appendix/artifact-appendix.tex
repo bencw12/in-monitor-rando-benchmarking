@@ -183,11 +183,8 @@ of important kernel functions for an unrandomized kernel, and kernels with (FG)K
 ~\\
 
 \textit{[Execution]}
-Executing \texttt{run\_lebench.sh \\ <nokaslr/kaslr/fgkaslr>} will
-boot either an unrandomized kernel (\texttt{nokaslr}), a kernel with KASLR (\texttt{kaslr}), or a kernel with FG-KASLR (\texttt{fgkaslr}). All three kernel variants need to be run
-to generate the data sufficient to recreate Figure 10. Once a kernel boots, log in as \texttt{root} (username \texttt{root}, password \texttt{root}),
-then execute \texttt{/LEBench/run.sh}. This will run the LEBench program and the kernel will shutdown when it is finished. Repeat this
-process for \texttt{kaslr} and \texttt{fgkaslr.}
+Executing \texttt{run\_lebench.sh} will
+boot an unrandomized kernel (\texttt{nokaslr}), a kernel with KASLR (\texttt{kaslr}), and a kernel with FG-KASLR (\texttt{fgkaslr}). At each boot, the LEBench process runs and the kernel will shutdown when it is finished.
 \\
 
 \textit{[Results]}
