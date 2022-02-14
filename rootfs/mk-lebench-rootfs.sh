@@ -12,6 +12,7 @@ mount -o loop ./boottime-rootfs.ext4 ./mount-boottime
 mount -o loop ./lebench.ext4 ./mount-lebench
 
 cp -r ./mount-boottime/* ./mount-lebench/
+rm -rf ./mount-lebench/etc/network/if-up.d/firecracker-tap
 cp -r ./LEBench ./mount-lebench/
 cp ./libc.so.6 ./mount-lebench/lib/
 cp ./libpthread.so.0 ./mount-lebench/lib/
