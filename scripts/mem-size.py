@@ -75,7 +75,7 @@ def mem_experiments():
         Patch(facecolor=parse_elf_color, label="1G"),
         Patch(facecolor=rando_color, label="2G"),
         Patch(facecolor="white", edgecolor="black", hatch="//////", label="in-monitor"),
-        Patch(facecolor="white", edgecolor="black", hatch="\\\\\\\\\\\\", label="Linux boot"),
+        Patch(facecolor="white", edgecolor="black", hatch="......", label="Linux boot"),
     ]
 
     plt.legend(handles=legend, ncol=4)
@@ -90,8 +90,6 @@ def mem_experiments():
     for bars, x in zip(all_bars, x_ax):
 
         for size_i in range(4):
-
-            print(all_dirs[size_i])
 
             temp = bars[all_dirs[size_i]]
             f = open(RESULTS_PATH + all_dirs[size_i] + "/" + temp)
