@@ -22,6 +22,7 @@ bar_color="white"
 def mem_experiments():
 
     figure(figsize=(6,3))
+    plt.ylim([0, 430])
 
     all_dirs = ["256", "512", "1024", "2048"]
 
@@ -74,8 +75,8 @@ def mem_experiments():
         Patch(facecolor=bootstrap_color, label="512M"),
         Patch(facecolor=parse_elf_color, label="1G"),
         Patch(facecolor=rando_color, label="2G"),
-        Patch(facecolor="white", edgecolor="black", hatch="//////", label="in-monitor"),
-        Patch(facecolor="white", edgecolor="black", hatch="......", label="Linux boot"),
+        Patch(facecolor="white", edgecolor="black", hatch="////", label="In Monitor"),
+        Patch(facecolor="white", edgecolor="black", hatch="....", label="Linux boot"),
     ]
 
     plt.legend(handles=legend, ncol=4)
@@ -83,8 +84,9 @@ def mem_experiments():
 
     results = {}
     keys = []
+    width=0.2
 
-    x_ax= [0, 1, 2, 4, 5, 6, 8, 9, 10]
+    x_ax= [0, 1, 2, 3.3, 4.3, 5.3, 6.6, 7.6, 8.6]
     colors= [decompress_color, bootstrap_color, parse_elf_color, rando_color]
 
     for bars, x in zip(all_bars, x_ax):
@@ -106,21 +108,21 @@ def mem_experiments():
                     guest_times.append(int(line["guest"]))
 
             plt.bar(
-                x + (0.2*size_i), 
+                x + (width*size_i), 
                 np.average(guest_times)/1000.0,
-                width=0.2,
+                width=width,
                 bottom=np.average(in_monitor_times)/1000.0,
                 color="white",
                 edgecolor=colors[size_i],
-                hatch="\\\\\\\\\\\\"
+                hatch="...."
             )
             plt.bar(
-                x + (0.2*size_i),
+                x + (width*size_i),
                 np.average(in_monitor_times)/1000.0,
-                width=0.2,
+                width=width,
                 color="white",
                 edgecolor=colors[size_i],
-                hatch="///////"
+                hatch="/////"
             )
 
     keys = ['lupine-nokaslr', 'lupine-kaslr', 'lupine-fgkaslr',
