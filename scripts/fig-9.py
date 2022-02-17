@@ -205,13 +205,13 @@ def eval():
         plt.title(title)
         plt.legend(handles=legend)
         plt.xticks([1, 1.325, 1.65, 2.5, 2.825, 3.15, 4, 4.325, 4.65], [
-            "In-Monitor",
+            "Direct Boot",
             "Compression None",
             "LZ4",
-            "In-Monitor",
+            "Direct Boot",
             "Compression None",
             "LZ4",
-            "In-Monitor",
+            "Direct Boot",
             "Compression None",
             "LZ4",
         ], rotation=-25, ha='left')
