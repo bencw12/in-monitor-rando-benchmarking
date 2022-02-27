@@ -119,14 +119,15 @@ sleep 1
 
 pkill perf &> /dev/null
 
-sleep 1
+#wait for perf to terminate 
+wait ${PERF_PID}
 
 mkdir -p ./perf/
 
 #dump everything perf captured to file
 ${PERF} script -i ${PERF_DATA} > ${PWD}/perf/perf.log
 
-#scape output for timing info
+#scrape output for timing info
 
 fc_exec=$(grep "${2}" ${PWD}/perf/perf.log | awk '{print $4}' | sed 's/\.//' | sed 's/://g' )
 
