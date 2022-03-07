@@ -113,9 +113,9 @@ PERF_PID=$! &> /dev/null
 sleep 1
 
 #start firecracker
-${FC_BIN}   --api-sock /tmp/firecracker.socket --no-api --config-file ./vm_config.json --log-path /tmp/logs.file --level Debug --boot-timer
+${FC_BIN}   --api-sock /tmp/firecracker.socket --no-api --config-file ./vm_config.json --log-path /tmp/logs.file --level Debug --boot-timer &
 
-sleep 1
+wait $!
 
 pkill perf &> /dev/null
 
