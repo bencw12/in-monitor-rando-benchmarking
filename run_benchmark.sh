@@ -1,5 +1,11 @@
 #!/bin/bash
 
+rm -f /tmp/firecracker.socket
+rm -f /tmp/fc_perf.data
+rm -f /tmp/fc_perf.data.old
+rm -f /tmp/logs.file
+rm -f ${PWD}/perf/perf.log
+
 # Arg checks
 if [ "$#" -ne 4 ]; then
     echo "usage: $0 <kernel-path> <firecracker-path> <cache/no-cache> <mem-alloc-mb>"
@@ -98,9 +104,7 @@ fi
 
 echo ${CONFIG_FILE} > ./vm_config.json
 
-rm -f /tmp/logs.file
 touch /tmp/logs.file
-rm -rf /tmp/firecracker.socket
 
 PERF="${PWD}/bin/perf"
 PERF_DATA="/tmp/fc_perf.data"
