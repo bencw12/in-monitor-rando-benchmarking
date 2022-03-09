@@ -8,6 +8,7 @@ This repository contains the scripts/kernels/binaries necessary to evaluate the 
 ## Dependencies
 - `perf` depends on `libpython2.7`
 - Firecracker recommends Linux 4.14, or 5.10
+- Firecracker requires Intel/AMD x86_64 CPUs that offer hardware virtualization support
 - Scripts to generate graphs need Python 3.
 
 # Running Benchmarks
@@ -30,12 +31,16 @@ This repository contains the scripts/kernels/binaries necessary to evaluate the 
 `gen_graphs.sh` calls all the python scripts in ./scripts to generate graphs from the data in ./results-paper
 
 ## /bin
-Contains 4 Firecracker binaries: the stock Firecracker without our patches [firecracker-nokaslr](https://github.com/bencw12/firecracker/tree/stock), Firecracker with just KASLR implemented [firecracker-kaslr](https://github.com/bencw12/firecracker/tree/kaslr), Firecracker with FG-KASLR implemented [firecracker-fgkaslr](https://github.com/bencw12/firecracker/tree/fgkaslr), and Firecracker with a patch based on [this pull request](https://github.com/firecracker-microvm/firecracker/pull/670) to boot a bzImage [firecracker-bzImage](https://github.com/bencw12/firecracker/tree/bzImage). The `perf` binary we used is also included.
+Contains 4 Firecracker binaries: the stock Firecracker without our patches [firecracker-nokaslr](https://github.com/bencw12/firecracker/tree/stock), Firecracker with just KASLR implemented: https://github.com/bencw12/firecracker/tree/kaslr, Firecracker with FG-KASLR implemented: https://github.com/bencw12/firecracker/tree/fgkaslr, and Firecracker with a patch based on [this pull request](https://github.com/firecracker-microvm/firecracker/pull/670) to boot a bzImage [firecracker-bzImage](https://github.com/bencw12/firecracker/tree/bzImage). The `perf` binary we used is also included.
+
+To build any of the Firecracker binaries, run `tools/devtool build --release` from the root of the repository. To build `perf`, run `make` from `linux/tools/perf` in the Linux source tree.  
 ## /configs
 Contains the Linux kernel configuration files for [Lupine](https://systems-seminar-uiuc.github.io/spring20/content/a-linux-in-unikernel-clothing.pdf), [AWS](https://github.com/bencw12/firecracker/blob/stock/resources/microvm-kernel-x86_64.config), and the config from the distribution of Ubuntu on our machine. For each kernel, there are three variants: `nokaslr`, with randomization disabled, `kaslr`, with just coarse-grained randomization, and `fgkaslr`, with fine-grained randomization. Note that the variants for different compression schemes are not included, but another scheme can be selected by commenting `CONFIG_KERNEL_GZIP` and enabling another compression option. Each of the configs were generated from Linux 5.11-rc3 with our [compression none](https://github.com/bencw12/linux/tree/compression-none) scheme, so each contains the `CONFIG_KERNEL_NONE` option.
 ## /kernels
 Each kernel was compiled with IO writes with unique values before and after portions of the boot which are traced by `perf` so we can measure different parts of the boot process. Kernels with FG-KASLR implement these [patches](https://github.com/kaccardi/linux/tree/fg-kaslr) and are compiled without the fixup of `kallsyms` from this [tree](https://github.com/bencw12/linux/tree/perf-timestamps-fgkaslr-no-kallsyms). Kernels with `nokaslr` or `kaslr`
 are built from a [tree](https://github.com/bencw12/linux/tree/perf-timestamps-kaslr) with the IO writes and without the FG-KASLR patches. All patches were implemented on top of the source tree for Linux version 5.11-rc3.
+
+Kernels simply need to be configured to enable KASLR (CONFIG_RANDOMIZE_BASE) or FG-KASLR (CONFIG_FG_KASLR) from the [FG-KASLR source tree](https://github.com/kaccardi/linux/tree/fg-kaslr). After building the kernel, the relocations can be obtained from `linux/arch/x86/boot/compressed/vmlinux.relocs` and provided to the VMM via the `relocs_path` configuration option.
 ### /compression-bakeoff
 bzImages compressed with bzip2, gzip, lz4, lzma, lzo, and xz used to evaluate overall performance of each compression scheme during boot. 
 ### /compression-none
