@@ -9,7 +9,7 @@ This repository contains the scripts/kernels/binaries necessary to evaluate the 
 - `perf` depends on `libpython2.7`
 - Firecracker recommends Linux 4.14, or 5.10
 - Firecracker requires Intel/AMD x86_64 CPUs that offer hardware virtualization support
-- Scripts to generate graphs need Python 3.
+- Scripts to generate graphs need Python 3 and `python3-matplotlib`.
 
 # Running Benchmarks
 `run_compression_bakeoff.sh <num-runs>` runs the experiment for [Figure 3](./graphs/compression-bakeoff.pdf) comparing overall boot time of bzImages using various compression schemes supported by Linux. The cache is warmed up before recording data for each kernel. Our results show that `lz4` is the fastest compression scheme.
