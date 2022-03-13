@@ -16,6 +16,9 @@ This repository contains the scripts/kernels/binaries necessary to evaluate the 
 
 `run_cache_effects.sh <num-runs>` runs the experiment for [Figure 4](./graphs/overall-boot-breakdown.pdf) and data used in [Figure 5](./graphs/bootstrap-loader-breakdown.pdf) to compare the affects of a warm/cold cache on boot time. Our results show that when kernels can be cached, booting an uncompressed kernel is optimal, and when the cache is cold, a bzImage achieves optimal performance.
 
+:warning: **Depending on your machine's hardeware/software stack, results for Figure 4 may differ**: on our machine, booting a bzImage is faster than a direct boot when kernels aren't cached, but a machine with a faster storage device may result in a bzImage booting slower both when it is cached, and when it is not in the cache.  
+
+
 `run_bootstrap_comparison.sh <num-runs>` runs the experiment for [Figure 6](./graphs/compression-none-vs-lz4-overall.pdf) comparing boot performance of [compression-none](https://github.com/bencw12/linux/tree/compression-none-old), bzImage with lz4 compression, [optimized-compression-none](https://github.com/bencw12/linux/tree/compression-none), and an uncompressed boot.
 
 `run_eval.sh <num-runs>` runs the experiment for Figure 9 [a](./graphs/lupine4-eval.pdf), [b](./graphs/aws-eval.pdf) and [c](./graphs/ubuntu-eval.pdf) used to compare in-monitor randomization, self-randomization with optimized compression-none, and self-randomization with lz4 compression. Our results show that in-monitor is the fastest method of randomization, followed by compression-none, then lz4. 
@@ -39,6 +42,7 @@ Contains the Linux kernel configuration files for [Lupine](https://systems-semin
 ## /kernels
 Each kernel was compiled with IO writes with unique values before and after portions of the boot which are traced by `perf` so we can measure different parts of the boot process. Kernels with FG-KASLR implement these [patches](https://github.com/kaccardi/linux/tree/fg-kaslr) and are compiled without the fixup of `kallsyms` from this [tree](https://github.com/bencw12/linux/tree/perf-timestamps-fgkaslr-no-kallsyms). Kernels with `nokaslr` or `kaslr`
 are built from a [tree](https://github.com/bencw12/linux/tree/perf-timestamps-kaslr) with the IO writes and without the FG-KASLR patches. All patches were implemented on top of the source tree for Linux version 5.11-rc3.
+
 
 To boot your own kernel with our modified versions of Firecracker, the kernel configuration must enable KASLR (CONFIG_RANDOMIZE_BASE) or FG-KASLR (CONFIG_FG_KASLR) from the [FG-KASLR source tree](https://github.com/kaccardi/linux/tree/fg-kaslr). After building the kernel, the relocations can be obtained from `linux/arch/x86/boot/compressed/vmlinux.relocs` and provided to the VMM via the `relocs_path` configuration option.
 ### /compression-bakeoff
