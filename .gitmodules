@@ -1,0 +1,4 @@
+[submodule "firecracker-stock"]
+	path = firecracker-stock
+	url = https://github.com/bencw12/firecracker.git
+	branch = stock
