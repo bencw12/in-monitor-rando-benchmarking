@@ -9,6 +9,8 @@
 [submodule "firecracker-fgkaslr"]
 	path = firecracker-fgkaslr
 	url = https://github.com/bencw12/firecracker.git
+	branch = fgkaslr
 [submodule "firecracker-bzImage"]
 	path = firecracker-bzImage
 	url = https://github.com/bencw12/firecracker.git
+	branch = bzImage
