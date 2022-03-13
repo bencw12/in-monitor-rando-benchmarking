@@ -6,3 +6,6 @@
 	path = firecracker-kaslr
 	url = https://github.com/bencw12/firecracker.git
 	branch = kaslr
+[submodule "firecracker-fgkaslr"]
+	path = firecracker-fgkaslr
+	url = https://github.com/bencw12/firecracker.git
