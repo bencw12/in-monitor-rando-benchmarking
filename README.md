@@ -12,6 +12,13 @@ This repository contains the scripts/kernels/binaries necessary to evaluate the 
 - Scripts to generate graphs need Python 3 and `python3-matplotlib`.
 
 # Running Benchmarks
+
+## Setup
+Firecracker requires KVM access which can be granted
+with: `sudo setfacl -m u:$USER:rw /dev/kvm`
+
+## Experiments
+
 `run_compression_bakeoff.sh <num-runs>` runs the experiment for [Figure 3](./graphs/compression-bakeoff.pdf) comparing overall boot time of bzImages using various compression schemes supported by Linux. The cache is warmed up before recording data for each kernel. Our results show that `lz4` is the fastest compression scheme.
 
 `run_cache_effects.sh <num-runs>` runs the experiment for [Figure 4](./graphs/overall-boot-breakdown.pdf) and data used in [Figure 5](./graphs/bootstrap-loader-breakdown.pdf) to compare the affects of a warm/cold cache on boot time. Our results show that when kernels can be cached, booting an uncompressed kernel is optimal, and when the cache is cold, a bzImage achieves optimal performance.
