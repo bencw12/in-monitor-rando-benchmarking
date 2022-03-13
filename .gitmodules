@@ -2,3 +2,7 @@
 	path = firecracker-stock
 	url = https://github.com/bencw12/firecracker.git
 	branch = stock
+[submodule "firecracker-kaslr"]
+	path = firecracker-kaslr
+	url = https://github.com/bencw12/firecracker.git
+	branch = kaslr
