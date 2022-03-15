@@ -7,6 +7,9 @@ import os
 from matplotlib.pyplot import bar, figure
 import json
 
+matplotlib.rcParams['pdf.fonttype'] = 42
+matplotlib.rcParams['ps.fonttype'] = 42
+
 if os.path.isdir("./results/mem-size/"):
     RESULTS_PATH = "./results/mem-size/"
 else:

@@ -7,6 +7,9 @@ import os
 from matplotlib.pyplot import bar, figure
 import re
 
+matplotlib.rcParams['pdf.fonttype'] = 42
+matplotlib.rcParams['ps.fonttype'] = 42
+
 if os.path.isdir("./results/lebench/"):
     RESULTS_PATH = "./results/lebench/"
 else:

@@ -7,6 +7,9 @@ import os
 from matplotlib.pyplot import bar, figure
 import json
 
+matplotlib.rcParams['pdf.fonttype'] = 42
+matplotlib.rcParams['ps.fonttype'] = 42
+
 if os.path.isdir("./results/bootstrap-comparison/"):
     RESULTS_PATH = "./results/bootstrap-comparison/"
 else:
