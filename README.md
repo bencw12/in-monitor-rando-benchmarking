@@ -1,5 +1,6 @@
 # In-Monitor (FG)KASLR Benchmarking Suite
-This repository contains the scripts/kernels/binaries necessary to evaluate the performance of our implementation of in-monitor (FG)KASLR in Firecracker v0.26. We leverage `perf` (Linux profiling with performance counters), and small patches to the Linux kernel to make IO writes to a unique port to signal the beginning/end of relevant function calls/events. The first timestamp is taken when Firecracker is executed, and the last is taken after the call to execute the guest's `init` process. The results from the experiments we ran on our machine are also included. `perf` records and timestamps the call to exec Firecracker and each of the subsequent IO writes from the guest kernel.
+This repository contains the scripts/kernels/binaries necessary to evaluate the performance of our implementation of in-monitor (FG)KASLR in Firecracker v0.26 and recreate
+the figures from our paper [KASLR in the age of MicroVMs](https://dl.acm.org/doi/10.1145/3492321.3519578). We leverage `perf` (Linux profiling with performance counters), and small patches to the Linux kernel to make IO writes to a unique port to signal the beginning/end of relevant function calls/events. The first timestamp is taken when Firecracker is executed, and the last is taken after the call to execute the guest's `init` process. The results from the experiments we ran on our machine are also included. `perf` records and timestamps the call to exec Firecracker and each of the subsequent IO writes from the guest kernel.
 ## Machine Specs
 - CPU: Intel(R) Core(TM) i7-4790 @ 3.60GHz
 - Memory: 8GB DDR3 @ 1600MHz
@@ -19,7 +20,7 @@ with: `sudo setfacl -m u:$USER:rw /dev/kvm`
 
 ## Experiments
 
-`run_all.sh <num-runs>` runs all experiments booting each kernel `<num-runs>` times where applicable.
+`run_all.sh <num-runs>` runs all experiments booting each kernel `<num-runs>` times where applicable.clea
 
 `run_compression_bakeoff.sh <num-runs>` runs the experiment for [Figure 3](./graphs/compression-bakeoff.pdf) comparing overall boot time of bzImages using various compression schemes supported by Linux. The cache is warmed up before recording data for each kernel. Our results show that `lz4` is the fastest compression scheme.
 
